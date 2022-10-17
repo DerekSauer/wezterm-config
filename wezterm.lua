@@ -26,7 +26,7 @@ return {
 
     -- Font config
     font = wezterm.font(default_font, {
-        weight = 'Medium'
+        weight = 'Regular'
     }),
     font_size = 12,
     line_height = 0.9,
