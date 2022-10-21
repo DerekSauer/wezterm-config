@@ -1,28 +1,93 @@
 local wezterm = require("wezterm")
 
 -- Use bash on linux and powershell on windows
-local default_term = { "/usr/bin/bash" }
-local default_args = { "-l" }
-if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-	default_term = { "C:/Program Files/WindowsApps/Microsoft.PowerShell_7.2.6.0_x64__8wekyb3d8bbwe/pwsh.exe" }
-	default_args = { "-NoLogo", "-NoProfile" }
+local powershell_path = "/Microsoft/WindowsApps/Microsoft.PowerShell_8wekyb3d8bbwe/pwsh.exe"
+local default_term = (wezterm.target_triple == "x86_64-pc-windows-msvc")
+		and { os.getenv("LOCALAPPDATA") .. powershell_path, "-NoLogo", "-NoProfile" }
+	or { "/usr/bin/bash", "-l" }
+
+-- My preferred font has a different name on Windows and Linux
+local default_font = (wezterm.target_triple == "x86_64-pc-windows-msvc") and "JetBrainsMono NF"
+	or "Jetbrains Mono Nerd Font"
+
+-- Strips basename from a file path (E.g.: /cat/dog becomes dog)
+local function stripbase(path)
+	return string.gsub(path, "(.*[/\\])(.*)", "%2")
 end
 
--- My prefered font has a different name on Windows and Linux
-local default_font = "Jetbrains Mono Nerd Font"
-if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-	default_font = "JetBrainsMono NF"
-end
+-- Define a number of useful icons
+-- Borrowed from: https://github.com/wez/wezterm/discussions/628
+local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
+local SOLID_LEFT_MOST = utf8.char(0x2588)
+local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
 
--- Compact launch args
-local launch_args = default_term
-for _, value in pairs(default_args) do
-	table.insert(launch_args, value)
-end
+local ADMIN_ICON = utf8.char(0xf49c)
+
+local CMD_ICON = utf8.char(0xe62a)
+local PS_ICON = utf8.char(0xe70f)
+local WSL_ICON = utf8.char(0xf83c)
+
+local VIM_ICON = utf8.char(0xe62b)
+local PAGER_ICON = utf8.char(0xf718)
+local FUZZY_ICON = utf8.char(0xf0b0)
+local HOURGLASS_ICON = utf8.char(0xf252)
+local SUNGLASS_ICON = utf8.char(0xf9df)
+
+local PYTHON_ICON = utf8.char(0xf820)
+local NODE_ICON = utf8.char(0xe74e)
+local DENO_ICON = utf8.char(0xe628)
+
+local SUP_IDX = {
+	"¹",
+	"²",
+	"³",
+	"⁴",
+	"⁵",
+	"⁶",
+	"⁷",
+	"⁸",
+	"⁹",
+	"¹⁰",
+	"¹¹",
+	"¹²",
+	"¹³",
+	"¹⁴",
+	"¹⁵",
+	"¹⁶",
+	"¹⁷",
+	"¹⁸",
+	"¹⁹",
+	"²⁰",
+}
+local SUB_IDX = {
+	"₁",
+	"₂",
+	"₃",
+	"₄",
+	"₅",
+	"₆",
+	"₇",
+	"₈",
+	"₉",
+	"₁₀",
+	"₁₁",
+	"₁₂",
+	"₁₃",
+	"₁₄",
+	"₁₅",
+	"₁₆",
+	"₁₇",
+	"₁₈",
+	"₁₉",
+	"₂₀",
+}
+
+-- Decorate the tab bar with icons based on the running shell/application and its state
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width) end)
 
 return {
 	-- Default shell (bash or pwsh depending on OS)
-	default_prog = launch_args,
+	default_prog = default_term,
 
 	-- Font config
 	font = wezterm.font(default_font, {
@@ -40,6 +105,8 @@ return {
 	audible_bell = "Disabled",
 	color_scheme = "kanagawabones",
 	enable_scroll_bar = false,
+	window_background_opacity = 1.0,
+	text_background_opacity = 1.0,
 	window_padding = {
 		left = 0,
 		right = 0,
@@ -49,14 +116,31 @@ return {
 
 	-- Tab bar
 	hide_tab_bar_if_only_one_tab = true,
-	use_fancy_tab_bar = false,
+	use_fancy_tab_bar = true,
 	window_frame = {
 		font = wezterm.font({
 			family = default_font,
-			weight = "Light",
+			weight = "Regular",
 		}),
 		font_size = 10,
 		active_titlebar_bg = "#1F1F28",
 		inactive_titlebar_bg = "#1F1F28",
+	},
+
+	-- Visual bell, flare the cursor
+	visual_bell = {
+		fade_in_duration_ms = 75,
+		fade_out_duration_ms = 75,
+		target = "CursorColor",
+	},
+
+	-- SSH domains
+	ssh_domains = {
+		-- My 3D printer
+		{
+			name = "The Prusa - Klipper",
+			remote_address = "prusa.local",
+			username = "pi",
+		},
 	},
 }
