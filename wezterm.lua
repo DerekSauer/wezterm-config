@@ -10,33 +10,31 @@ local default_term = (wezterm.target_triple == "x86_64-pc-windows-msvc")
 local default_font = (wezterm.target_triple == "x86_64-pc-windows-msvc") and "JetBrainsMono NF"
 	or "Jetbrains Mono Nerd Font"
 
+-- Colorscheme
+local colorscheme_preset = "kanagawabones"
+local colorscheme_table = wezterm.color.get_builtin_schemes()[colorscheme_preset]
+
 -- Strips basename from a file path (E.g.: /cat/dog becomes dog)
 local function stripbase(path)
 	return string.gsub(path, "(.*[/\\])(.*)", "%2")
 end
 
 -- Define a number of useful icons
--- Borrowed from: https://github.com/wez/wezterm/discussions/628
 local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
 local SOLID_LEFT_MOST = utf8.char(0x2588)
 local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
-
 local ADMIN_ICON = utf8.char(0xf49c)
-
-local CMD_ICON = utf8.char(0xe62a)
-local PS_ICON = utf8.char(0xe70f)
-local WSL_ICON = utf8.char(0xf83c)
-
+local CMD_ICON = utf8.char(0xebc4)
+local PS_ICON = utf8.char(0xebc7)
+local WSL_ICON = utf8.char(0xebc6)
 local VIM_ICON = utf8.char(0xe62b)
 local PAGER_ICON = utf8.char(0xf718)
 local FUZZY_ICON = utf8.char(0xf0b0)
 local HOURGLASS_ICON = utf8.char(0xf252)
 local SUNGLASS_ICON = utf8.char(0xf9df)
+local BASH_ICON = utf8.char(0xebca)
 
-local PYTHON_ICON = utf8.char(0xf820)
-local NODE_ICON = utf8.char(0xe74e)
-local DENO_ICON = utf8.char(0xe628)
-
+-- Superset numerals for labelling tabs
 local SUP_IDX = {
 	"¹",
 	"²",
@@ -59,6 +57,8 @@ local SUP_IDX = {
 	"¹⁹",
 	"²⁰",
 }
+
+-- Subset numerals for labelling tabs
 local SUB_IDX = {
 	"₁",
 	"₂",
@@ -83,7 +83,83 @@ local SUB_IDX = {
 }
 
 -- Decorate the tab bar with icons based on the running shell/application and its state
-wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width) end)
+wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
+	local edge_background = colorscheme_table.background
+	local background = colorscheme_table.brights[1]
+	local foreground = colorscheme_table.ansi[1]
+	local dim_foreground = colorscheme_table.background
+
+	if tab.is_active then
+		background = colorscheme_table.ansi[4]
+		foreground = colorscheme_table.ansi[1]
+	elseif hover then
+		background = colorscheme_table.brights[4]
+		foreground = colorscheme_table.ansi[1]
+	end
+
+	local edge_foreground = background
+	local process_name = tab.active_pane.foreground_process_name
+	local pane_title = tab.active_pane.title
+	local exec_name = stripbase(process_name):gsub("%.exe$", "")
+	local title_with_icon
+
+	-- Select an appropriate icon
+	if exec_name == "pwsh" then
+		title_with_icon = PS_ICON .. " PS"
+	elseif exec_name == "cmd" then
+		title_with_icon = CMD_ICON .. " CMD"
+	elseif exec_name == "wsl" or exec_name == "wslhost" then
+		title_with_icon = WSL_ICON .. " WSL"
+	elseif exec_name == "nvim" then
+		title_with_icon = VIM_ICON .. pane_title:gsub("^(%S+)%s+(%d+/%d+) %- nvim", " %2 %1")
+	elseif exec_name == "bat" or exec_name == "less" or exec_name == "moar" then
+		title_with_icon = PAGER_ICON .. " " .. exec_name:upper()
+	elseif exec_name == "fzf" or exec_name == "hs" or exec_name == "peco" then
+		title_with_icon = FUZZY_ICON .. " " .. exec_name:upper()
+	elseif exec_name == "btm" or exec_name == "ntop" then
+		title_with_icon = SUNGLASS_ICON .. " " .. exec_name:upper()
+	elseif exec_name == "bash" then
+		title_with_icon = BASH_ICON .. " BASH"
+	else
+		title_with_icon = HOURGLASS_ICON .. " " .. exec_name
+	end
+
+	if pane_title:match("^Administrator: ") then
+		title_with_icon = title_with_icon .. " " .. ADMIN_ICON
+	end
+
+	-- If this is the leftmost tab use a solid bar instead of an arrow
+	local left_arrow = SOLID_LEFT_ARROW
+	if tab.tab_index == 0 then
+		left_arrow = SOLID_LEFT_MOST
+	end
+
+	-- Identify tab number with a numeral in the lower left corner
+	local id = SUB_IDX[tab.tab_index + 1]
+
+	-- Identify pane number with a numeral in the upper right corner
+	local pid = SUP_IDX[tab.active_pane.pane_index + 1]
+
+	-- Trim long titles
+	local title = " " .. wezterm.truncate_right(title_with_icon, max_width - 6) .. " "
+
+	return {
+		{ Attribute = { Intensity = "Bold" } },
+		{ Background = { Color = edge_background } },
+		{ Foreground = { Color = edge_foreground } },
+		{ Text = left_arrow },
+		{ Background = { Color = background } },
+		{ Foreground = { Color = foreground } },
+		{ Text = id },
+		{ Text = title },
+		{ Foreground = { Color = dim_foreground } },
+		{ Text = pid },
+		{ Background = { Color = edge_background } },
+		{ Foreground = { Color = edge_foreground } },
+		{ Text = SOLID_RIGHT_ARROW },
+		{ Attribute = { Intensity = "Normal" } },
+	}
+end)
 
 return {
 	-- Default shell (bash or pwsh depending on OS)
@@ -91,19 +167,17 @@ return {
 
 	-- Font config
 	font = wezterm.font(default_font, {
-		weight = "Regular",
+		weight = "Medium",
 	}),
 	font_size = 12,
 	line_height = 0.9,
-	freetype_interpreter_version = 40,
-	freetype_load_target = "Light",
-	freetype_render_target = "HorizontalLcd",
+	freetype_load_target = "Normal",
 
 	-- Window size and theming
 	initial_cols = 120,
 	initial_rows = 32,
 	audible_bell = "Disabled",
-	color_scheme = "kanagawabones",
+	color_scheme = colorscheme_preset,
 	enable_scroll_bar = false,
 	window_background_opacity = 1.0,
 	text_background_opacity = 1.0,
@@ -116,15 +190,22 @@ return {
 
 	-- Tab bar
 	hide_tab_bar_if_only_one_tab = true,
-	use_fancy_tab_bar = true,
-	window_frame = {
-		font = wezterm.font({
-			family = default_font,
-			weight = "Regular",
-		}),
-		font_size = 10,
-		active_titlebar_bg = "#1F1F28",
-		inactive_titlebar_bg = "#1F1F28",
+	use_fancy_tab_bar = false,
+	tab_max_width = 60,
+	colors = {
+		tab_bar = {
+			background = colorscheme_table.background,
+			new_tab = {
+				bg_color = colorscheme_table.background,
+				fg_color = colorscheme_table.foreground,
+				intensity = "Bold",
+			},
+			new_tab_hover = {
+				bg_color = colorscheme_table.background,
+				fg_color = colorscheme_table.foreground,
+				italic = true,
+			},
+		},
 	},
 
 	-- Visual bell, flare the cursor
@@ -132,15 +213,5 @@ return {
 		fade_in_duration_ms = 75,
 		fade_out_duration_ms = 75,
 		target = "CursorColor",
-	},
-
-	-- SSH domains
-	ssh_domains = {
-		-- My 3D printer
-		{
-			name = "The Prusa - Klipper",
-			remote_address = "prusa.local",
-			username = "pi",
-		},
 	},
 }
