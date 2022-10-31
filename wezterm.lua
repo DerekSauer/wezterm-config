@@ -11,7 +11,7 @@ local default_font = (wezterm.target_triple == "x86_64-pc-windows-msvc") and "Je
 	or "Jetbrains Mono Nerd Font"
 
 -- Colorscheme
-local colorscheme_preset = "kanagawabones"
+local colorscheme_preset = "Catppuccin Mocha"
 local colorscheme_table = wezterm.color.get_builtin_schemes()[colorscheme_preset]
 
 -- Strips basename from a file path (E.g.: /cat/dog becomes dog)
