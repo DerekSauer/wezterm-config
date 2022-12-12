@@ -8,7 +8,7 @@ local default_term = (wezterm.target_triple == "x86_64-pc-windows-msvc")
 
 -- My preferred font has a different name on Windows and Linux
 local default_font = (wezterm.target_triple == "x86_64-pc-windows-msvc") and "JetBrainsMono NF"
-    or "Jetbrains Mono Nerd Font"
+    or "JetbrainsMono Nerd Font"
 
 -- Colorscheme
 local colorscheme_preset = "Catppuccin Mocha"
