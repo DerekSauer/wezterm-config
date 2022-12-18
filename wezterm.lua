@@ -18,17 +18,6 @@ return {
     -- Launch menu configuration
     launch_menu = launch_menu,
 
-    -- WSL
-    wsl_domains = {
-        {
-            name = "WSL:fedoraremix",
-            distribution = "Fedora",
-            username = "dsauer",
-            default_cwd = "/home/dsauer",
-            default_prog = { "bash" },
-        },
-    },
-
     -- SSH
     ssh_domains = require("config.ssh_domains"),
 
