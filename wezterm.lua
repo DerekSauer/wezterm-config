@@ -27,6 +27,10 @@ return {
     }),
     font_size = 12,
     line_height = 0.9,
+    freetype_interpreter_version = 40,
+    freetype_load_flags = "DEFAULT",
+    freetype_load_target = "Normal",
+    freetype_render_target = "HorizontalLcd",
 
     -- Window size and theming
     initial_cols = 120,
