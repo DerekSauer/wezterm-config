@@ -6,11 +6,12 @@ if get_os_name.get_os_name() == "Windows" then
     launch_menu = {
         {
             label = "PowerShell Core",
-            args = { "pwsh" },
+            args = { "pwsh.exe", "-NoLogo" },
+            domain = "DefaultDomain",
         },
         {
             label = "Command Prompt",
-            args = { "cmd" },
+            args = { "cmd.exe" },
         },
     }
 else
