@@ -26,7 +26,7 @@ local BASH_ICON = utf8.char(0xebca)
 function M.setup()
     -- Decorate the tab bar with icons based on the running shell/application and its state
     wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
-        local colorscheme_table = require("config.colorscheme").colorscheme_table
+        local colorscheme_table = require("config.colorscheme").colors
 
         local edge_background = colorscheme_table.background
         local background = colorscheme_table.brights[1]
