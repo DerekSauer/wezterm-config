@@ -2,6 +2,7 @@ local wezterm = require("wezterm")
 
 return {
     -- Typical CTRL-C/V copy paste commands.
+    -- Can press CTRL-SHIFT-C to send SIGTERM
     {
         key = "c",
         mods = "CTRL",

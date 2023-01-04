@@ -1,37 +1,51 @@
 local wezterm = require("wezterm")
-local os_name = require("config.get_os_name")
-local keybindings = require("config.keybinds")
-local launch_menu = require("config.launch_menu")
 
 -- Use bash on linux and powershell on windows
-local default_term = os_name.get_os_name() == "Windows" and { "pwsh.exe" } or { "bash" }
+local default_term = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" } or { "bash" }
 
 -- My preferred font has a different name on Windows and Linux
-local default_font = os_name.get_os_name() == "Windows" and "JetBrainsMono NF" or "JetbrainsMono Nerd Font"
+local default_font_name = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetBrainsMono NF"
+    or "JetbrainsMono Nerd Font"
+
+-- Customize font size per device
+local default_font_size = 12.0
+if wezterm.hostname() == "Monolith" then
+    default_font_size = 11.0
+elseif wezterm.hostname() == "thinktop" then
+    default_font_size = 13.0
+elseif wezterm.hostname() == "CNC-PROG" then
+    default_font_size = 11.75
+end
+
+-- Customize font weight per device
+local default_font_weight = "Regular"
+if wezterm.hostname() == "Monolith" then
+    default_font_weight = "Regular"
+elseif wezterm.hostname() == "thinktop" then
+    default_font_weight = "Regular"
+elseif wezterm.hostname() == "CNC-PROG" then
+    default_font_weight = "Regular"
+end
 
 return {
     -- Default shell (bash or pwsh depending on OS)
     default_prog = default_term,
 
     -- Launch menu configuration
-    launch_menu = launch_menu,
+    launch_menu = require("config.launch_menu"),
 
     -- SSH
     ssh_domains = require("config.ssh_domains"),
 
     -- Font config
-    font = wezterm.font(default_font, {
-        weight = "Regular",
+    font = wezterm.font(default_font_name, {
+        weight = default_font_weight,
     }),
-    font_size = 12,
+    font_size = default_font_size,
     line_height = 0.9,
-    freetype_interpreter_version = 40,
-    freetype_load_flags = "DEFAULT",
-    freetype_load_target = "Normal",
-    freetype_render_target = "HorizontalLcd",
 
     -- Window size and theming
-    colors = require("config.colorscheme").colors,
+    colors = require("config.colorscheme"),
     initial_cols = 120,
     initial_rows = 32,
     audible_bell = "Disabled",
@@ -63,5 +77,5 @@ return {
 
     -- Keybindings
     disable_default_key_bindings = true,
-    keys = keybindings,
+    keys = require("config.keybinds"),
 }

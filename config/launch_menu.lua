@@ -1,8 +1,8 @@
-local get_os_name = require("config.get_os_name")
+local wezterm = require("wezterm")
 
 local launch_menu = {}
 
-if get_os_name.get_os_name() == "Windows" then
+if wezterm.target_triple == "x86_64-pc-windows-msvc" then
     launch_menu = {
         {
             label = "PowerShell Core",
@@ -12,11 +12,12 @@ if get_os_name.get_os_name() == "Windows" then
         {
             label = "Command Prompt",
             args = { "cmd.exe" },
+            domain = "DefaultDomain",
         },
     }
 else
     launch_menu = {
-        { label = "bash", args = { "/usr/bin/bash" } },
+        { label = "Bash Shell", args = { "/usr/bin/bash" } },
     }
 end
 

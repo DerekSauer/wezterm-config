@@ -1,6 +1,4 @@
-local M = {}
-
-M.colors = {
+return {
     foreground = "#dcd7ba",
     background = "#1f1f28",
 
@@ -32,5 +30,3 @@ M.colors = {
         },
     },
 }
-
-return M
