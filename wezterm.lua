@@ -27,6 +27,18 @@ elseif wezterm.hostname() == "CNC-PROG" then
     default_font_weight = "Regular"
 end
 
+-- Use Wezterm's terminfo if available
+local function get_terminfo()
+    local term_file = io.open("~/.terminfo/w/wezterm", "r")
+
+    if term_file ~= nil then
+        io.close(term_file)
+        return "wezterm"
+    else
+        return "xterm-256color"
+    end
+end
+
 return {
     -- Default shell (bash or pwsh depending on OS)
     default_prog = default_term,
@@ -45,10 +57,12 @@ return {
     line_height = 0.9,
 
     -- Window size and theming
+    term = get_terminfo(),
     colors = require("config.colorscheme"),
     initial_cols = 120,
     initial_rows = 32,
     audible_bell = "Disabled",
+    scrollback_lines = 1000,
     force_reverse_video_cursor = true,
     enable_scroll_bar = false,
     window_background_opacity = 1.0,
