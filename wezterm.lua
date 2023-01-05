@@ -12,7 +12,7 @@ local default_font_size = 12.0
 if wezterm.hostname() == "Monolith" then
     default_font_size = 11.0
 elseif wezterm.hostname() == "thinktop" then
-    default_font_size = 13.0
+    default_font_size = 13
 elseif wezterm.hostname() == "CNC-PROG" then
     default_font_size = 11.75
 end
@@ -22,7 +22,7 @@ local default_font_weight = "Regular"
 if wezterm.hostname() == "Monolith" then
     default_font_weight = "Regular"
 elseif wezterm.hostname() == "thinktop" then
-    default_font_weight = "Regular"
+    default_font_weight = "Medium"
 elseif wezterm.hostname() == "CNC-PROG" then
     default_font_weight = "Regular"
 end
