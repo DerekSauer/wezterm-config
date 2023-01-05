@@ -14,7 +14,7 @@ if wezterm.hostname() == "Monolith" then
 elseif wezterm.hostname() == "thinktop" then
     default_font_size = 13
 elseif wezterm.hostname() == "CNC-PROG" then
-    default_font_size = 11.75
+    default_font_size = 12
 end
 
 -- Customize font weight per device
