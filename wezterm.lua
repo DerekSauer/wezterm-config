@@ -1,31 +1,21 @@
 local wezterm = require("wezterm")
 
--- Use bash on linux and powershell on windows
-local default_term = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" } or { "bash" }
-
--- My preferred font has a different name on Windows and Linux
-local default_font_name = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetBrainsMono NF"
+-- Jetbrains Mono Nerd Font has a different name on Windows and other systems.
+local jetbrains_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetBrainsMono NF"
     or "JetbrainsMono Nerd Font"
 
--- Customize font size per device
-local default_font_size = 12.0
-if wezterm.hostname() == "Monolith" then
-    default_font_size = 11.0
-elseif wezterm.hostname() == "thinktop" then
-    default_font_size = 13
-elseif wezterm.hostname() == "CNC-PROG" then
-    default_font_size = 12
-end
-
--- Customize font weight per device
-local default_font_weight = "Regular"
-if wezterm.hostname() == "Monolith" then
-    default_font_weight = "Regular"
-elseif wezterm.hostname() == "thinktop" then
-    default_font_weight = "Medium"
-elseif wezterm.hostname() == "CNC-PROG" then
-    default_font_weight = "Regular"
-end
+-- Wezterm already has Jetbrains Mono and a Symbols font built-in but the symbols font
+-- glyphs are oversized and end up sitting below the text baseline when scaled to appropriate size.
+-- We'll use the Jetbrains Mono Nerd Font who's symbols mostly fit well and fallback to
+-- the built-ins when the Nerd Font is unavailable
+-- Using 'Light' weight until the WebGpu frontend's font gamma issue is fixed
+-- E.g.: Light text on dark looks bold, but dark on light looks thin.
+local font_stack = {
+    { family = jetbrains_nf, weight = "Light" },
+    { family = "JetBrains Mono", weight = "Light" },
+    { family = "Symbols Nerd Font Mono", weight = "Light" },
+    { family = "Noto Color Emoji", weight = "Light", assume_emoji_presentation = true }
+}
 
 -- Use Wezterm's terminfo if available
 local function get_terminfo()
@@ -40,21 +30,21 @@ local function get_terminfo()
 end
 
 return {
-    -- Default shell (bash or pwsh depending on OS)
-    default_prog = default_term,
+    font = wezterm.font_with_fallback(font_stack),
+    font_size = 12.0,
+    line_height = 0.9,
+
+    -- Try out the new WebGPU front end
+    front_end = "WebGpu",
+
+    -- Default shell (Powershell on Windows $SHELL on other systems)
+    default_prog = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" },
 
     -- Launch menu configuration
     launch_menu = require("config.launch_menu"),
 
     -- SSH
     ssh_domains = require("config.ssh_domains"),
-
-    -- Font config
-    font = wezterm.font(default_font_name, {
-        weight = default_font_weight,
-    }),
-    font_size = default_font_size,
-    line_height = 0.9,
 
     -- Window size and theming
     term = get_terminfo(),

@@ -1,9 +1,7 @@
 local wezterm = require("wezterm")
 
-local launch_menu = {}
-
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    launch_menu = {
+    return {
         {
             label = "PowerShell Core",
             args = { "pwsh.exe", "-NoLogo" },
@@ -16,9 +14,5 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
         },
     }
 else
-    launch_menu = {
-        { label = "Bash Shell", args = { "/usr/bin/bash" } },
-    }
+    return {}
 end
-
-return launch_menu
