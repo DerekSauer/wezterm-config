@@ -17,6 +17,11 @@ return {
     -- All other terminal commands use ALT as prefix
     -- since it is not used for anything important in Vim
     {
+        key = "l",
+        mods = "CTRL|SHIFT",
+        action = wezterm.action.ShowDebugOverlay,
+    },
+    {
         key = "\\",
         mods = "ALT",
         action = wezterm.action.ShowLauncher,
