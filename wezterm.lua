@@ -8,13 +8,11 @@ local jetbrains_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetB
 -- glyphs are oversized and end up sitting below the text baseline when scaled to appropriate size.
 -- We'll use the Jetbrains Mono Nerd Font who's symbols mostly fit well and fallback to
 -- the built-ins when the Nerd Font is unavailable
--- Using 'Light' weight until the WebGpu frontend's font gamma issue is fixed
--- E.g.: Light text on dark looks bold, but dark on light looks thin.
 local font_stack = {
-    { family = jetbrains_nf, weight = "Light" },
-    { family = "JetBrains Mono", weight = "Light" },
-    { family = "Symbols Nerd Font Mono", weight = "Light" },
-    { family = "Noto Color Emoji", weight = "Light", assume_emoji_presentation = true }
+    { family = jetbrains_nf, weight = "Regular" },
+    { family = "JetBrains Mono", weight = "Regular" },
+    { family = "Symbols Nerd Font Mono", weight = "Regular" },
+    { family = "Noto Color Emoji", weight = "Regular", assume_emoji_presentation = true }
 }
 
 -- Use Wezterm's terminfo if available
