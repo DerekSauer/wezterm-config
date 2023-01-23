@@ -31,6 +31,8 @@ return {
     font = wezterm.font_with_fallback(font_stack),
     font_size = 12.0,
     line_height = 0.9,
+    freetype_interpreter_version = 40,
+    unicode_version = 14,
 
     -- Try out the new WebGPU front end
     front_end = "WebGpu",
