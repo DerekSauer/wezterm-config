@@ -35,10 +35,10 @@ return {
     unicode_version = 14,
 
     -- Try out the new WebGPU front end
-    front_end = "WebGpu",
+    front_end = "OpenGL",
 
     -- Default shell (Powershell on Windows $SHELL on other systems)
-    default_prog = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" },
+    default_prog = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" } or {"/bin/bash"},
 
     -- Launch menu configuration
     launch_menu = require("config.launch_menu"),
