@@ -15,55 +15,7 @@ local font_stack = {
     { family = "Noto Color Emoji", weight = "Regular", assume_emoji_presentation = true },
 }
 
----Determine if Wezterm's terminfo is available. I keep a copy of it
----in Wezterm's config directory for convenience. This is just so Neovim uses undercurls properly.
----@return string|nil #Returns the path to the `directory` where the terminfo file is located, or `nil` if not found.
-local function get_wezterminfo_dir()
-    local wezterminfo_dir = os.getenv("HOME")
-
-    -- Home directory is a little different on Windows
-    if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-        wezterminfo_dir = os.getenv("HOMEDRIVE") .. os.getenv("HOMEPATH")
-    end
-
-    wezterminfo_dir = wezterminfo_dir .. "/.config/wezterm/terminfo"
-
-    local term_file = io.open(wezterminfo_dir .. "/wezterm", "r")
-
-    if term_file ~= nil then
-        io.close(term_file)
-        return wezterminfo_dir
-    else
-        return nil
-    end
-end
-
----If Wezterm's terminfo is available, use it and tell WSL where to find it.
----@return table #Returns either Wezterm's term info and associated env vars, or default xterm-256color.
-local function setup_terminfo()
-    local wezterminfo_dir = get_wezterminfo_dir()
-
-    if wezterminfo_dir then
-        return {
-            env = {
-                TERMINFO_DIRS = wezterminfo_dir,
-                WSLENV = "TERMINFO_DIRS",
-            },
-            term = "wezterm",
-        }
-    else
-        return {
-            env = {},
-            term = "xterm-256color",
-        }
-    end
-end
-
 return {
-    -- Terminfo settings
-    term = setup_terminfo().term,
-    set_environment_variables = setup_terminfo().env,
-
     -- Font settings
     font = wezterm.font_with_fallback(font_stack),
     font_size = 12.0,
