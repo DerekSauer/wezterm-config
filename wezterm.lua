@@ -5,29 +5,66 @@ local jetbrains_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetB
     or "JetbrainsMono Nerd Font"
 
 -- Wezterm already has Jetbrains Mono and a Symbols font built-in but the symbols font
--- glyphs are oversized and end up sitting below the text baseline when scaled to appropriate size.
+-- glyphs are undersized and end up sitting below the text baseline when scaled to appropriate size.
 -- We'll use the Jetbrains Mono Nerd Font who's symbols mostly fit well and fallback to
 -- the built-ins when the Nerd Font is unavailable
 local font_stack = {
     { family = jetbrains_nf, weight = "Regular" },
     { family = "JetBrains Mono", weight = "Regular" },
     { family = "Symbols Nerd Font Mono", weight = "Regular" },
-    { family = "Noto Color Emoji", weight = "Regular", assume_emoji_presentation = true }
+    { family = "Noto Color Emoji", weight = "Regular", assume_emoji_presentation = true },
 }
 
--- Use Wezterm's terminfo if available
-local function get_terminfo()
-    local term_file = io.open("~/.terminfo/w/wezterm", "r")
+---Determine if Wezterm's terminfo is available. I keep a copy of it
+---in Wezterm's config directory for convenience. This is just so Neovim uses undercurls properly.
+---@return string|nil #Returns the path to the `directory` where the terminfo file is located, or `nil` if not found.
+local function get_wezterminfo_dir()
+    local wezterminfo_dir = os.getenv("HOME")
+
+    -- Home directory is a little different on Windows
+    if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+        wezterminfo_dir = os.getenv("HOMEDRIVE") .. os.getenv("HOMEPATH")
+    end
+
+    wezterminfo_dir = wezterminfo_dir .. "/.config/wezterm/terminfo"
+
+    local term_file = io.open(wezterminfo_dir .. "/wezterm", "r")
 
     if term_file ~= nil then
         io.close(term_file)
-        return "wezterm"
+        return wezterminfo_dir
     else
-        return "xterm-256color"
+        return nil
+    end
+end
+
+---If Wezterm's terminfo is available, use it and tell WSL where to find it.
+---@return table #Returns either Wezterm's term info and associated env vars, or default xterm-256color.
+local function setup_terminfo()
+    local wezterminfo_dir = get_wezterminfo_dir()
+
+    if wezterminfo_dir then
+        return {
+            env = {
+                TERMINFO_DIRS = wezterminfo_dir,
+                WSLENV = "TERMINFO_DIRS",
+            },
+            term = "wezterm",
+        }
+    else
+        return {
+            env = {},
+            term = "xterm-256color",
+        }
     end
 end
 
 return {
+    -- Terminfo settings
+    term = setup_terminfo().term,
+    set_environment_variables = setup_terminfo().env,
+
+    -- Font settings
     font = wezterm.font_with_fallback(font_stack),
     font_size = 12.0,
     line_height = 0.9,
@@ -35,10 +72,15 @@ return {
     unicode_version = 14,
 
     -- Try out the new WebGPU front end
+    -- Addendum: It works and performs better than the OpenGL front end but
+    -- there is something odd going on with font rendering where light text on
+    -- a dark background looks thick (very bold), while dark text on a light
+    -- background looks thin. Maybe a gamma issue? Revert to OpenGL for now.
     front_end = "OpenGL",
 
     -- Default shell (Powershell on Windows $SHELL on other systems)
-    default_prog = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" } or {"/bin/bash"},
+    default_prog = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" } or
+        { "/bin/bash" },
 
     -- Launch menu configuration
     launch_menu = require("config.launch_menu"),
@@ -47,7 +89,6 @@ return {
     ssh_domains = require("config.ssh_domains"),
 
     -- Window size and theming
-    term = get_terminfo(),
     colors = require("config.colorscheme"),
     initial_cols = 120,
     initial_rows = 32,
