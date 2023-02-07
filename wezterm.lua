@@ -4,11 +4,12 @@ local wezterm = require("wezterm")
 local jetbrains_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetBrainsMono NF"
     or "JetbrainsMono Nerd Font"
 
--- Wezterm already has Jetbrains Mono and a Symbols font built-in but the symbols font
--- glyphs are undersized and end up sitting below the text baseline when scaled to appropriate size.
--- We'll use the Jetbrains Mono Nerd Font who's symbols mostly fit well and fallback to
--- the built-ins when the Nerd Font is unavailable
+-- Iosevka Nerd Font has a different name on Windows and other systems.
+local iosevka_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "Iosevka NF"
+    or "Iosevka Nerd Font"
+
 local font_stack = {
+    { family = iosevka_nf, weight = "Regular" },
     { family = jetbrains_nf, weight = "Regular" },
     { family = "JetBrains Mono", weight = "Regular" },
     { family = "Symbols Nerd Font Mono", weight = "Regular" },
@@ -18,10 +19,14 @@ local font_stack = {
 return {
     -- Font settings
     font = wezterm.font_with_fallback(font_stack),
-    font_size = 12.0,
+    font_size = 13.0,
     line_height = 0.9,
     freetype_interpreter_version = 40,
     unicode_version = 14,
+
+    -- This looks best on my low DPI 1080 displays
+    freetype_load_target = "Light",
+    freetype_render_target = "HorizontalLcd",
 
     -- Try out the new WebGPU front end
     -- Addendum: It works and performs better than the OpenGL front end but
