@@ -1,19 +1,11 @@
 local wezterm = require("wezterm")
 
--- Jetbrains Mono Nerd Font has a different name on Windows and other systems.
-local jetbrains_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "JetBrainsMono NF"
-    or "JetbrainsMono Nerd Font"
-
--- Iosevka Nerd Font has a different name on Windows and other systems.
-local iosevka_nf = wezterm.target_triple == "x86_64-pc-windows-msvc" and "Iosevka NF"
-    or "Iosevka Nerd Font"
-
 local font_stack = {
-    { family = iosevka_nf,               weight = "Regular" },
-    { family = jetbrains_nf,             weight = "Regular" },
-    { family = "JetBrains Mono",         weight = "Regular" },
-    { family = "Symbols Nerd Font Mono", weight = "Regular" },
-    { family = "Noto Color Emoji",       weight = "Regular", assume_emoji_presentation = true },
+    { family = "Iosevka Nerd Font",       weight = "Regular" },
+    { family = "JetbrainsMono Nerd Font", weight = "Regular" },
+    { family = "JetBrains Mono",          weight = "Regular" },
+    { family = "Symbols Nerd Font Mono",  weight = "Regular" },
+    { family = "Noto Color Emoji",        weight = "Regular", assume_emoji_presentation = true },
 }
 
 return {
