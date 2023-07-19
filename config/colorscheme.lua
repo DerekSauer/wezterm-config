@@ -1,4 +1,4 @@
-local colors = require("wezterm").get_builtin_color_schemes()["kanagawabones"]
+local colors = require("wezterm").get_builtin_color_schemes()["Catppuccin Mocha"]
 
 return {
     foreground = colors.foreground,
