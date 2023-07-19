@@ -12,9 +12,9 @@ return {
     -- Font settings
     font = wezterm.font_with_fallback(font_stack),
     font_size = 13.0,
-    line_height = 0.9,
     freetype_interpreter_version = 40,
     unicode_version = 14,
+    warn_about_missing_glyphs = false,
     -- Try out the new WebGPU front end
     -- Addendum: It works and performs better than the OpenGL front end but
     -- there is something odd going on with font rendering where light text on
