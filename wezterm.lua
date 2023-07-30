@@ -14,6 +14,7 @@ return {
     font_size = 13.0,
     freetype_interpreter_version = 40,
     unicode_version = 14,
+    harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
     warn_about_missing_glyphs = false,
     -- Try out the new WebGPU front end
     -- Addendum: It works and performs better than the OpenGL front end but
