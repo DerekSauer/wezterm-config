@@ -1,40 +1,42 @@
-local tundra_colors = {
-    foreground = "#D1D5DB",
-    background = "#111827",
+local colors = {
+    foreground = "#dcd7ba",
+    background = "#1f1f28",
 
-    cursor_fg = "#111827",
-    cursor_bg = "#D1D5DB",
-    cursor_border = "#111827",
+    cursor_bg = "#c8c093",
+    cursor_fg = "#c8c093",
+    cursor_border = "#c8c093",
 
-    selection_fg = "#DDD6FE",
-    selection_bg = "#374151",
+    selection_fg = "#c8c093",
+    selection_bg = "#2d4f67",
 
-    scrollbar_thumb = "#6B7280",
-    split = "#6B7280",
+    scrollbar_thumb = "#16161d",
+    split = "#16161d",
 
     ansi = {
-        "#6B7280",
-        "#FCA5A5",
-        "#B1E3AD",
-        "#FBC19D",
-        "#BAE6FD",
-        "#957FB8",
-        "#DDD6FE",
-        "#A5F3FC",
+        "#090618",
+        "#c34043",
+        "#76946a",
+        "#c0a36e",
+        "#7e9cd8",
+        "#957fb8",
+        "#6a9589",
+        "#c8c093",
     },
     brights = {
-        "#6B7280",
-        "#FCA5A5",
-        "#B1E3AD",
-        "#FBC19D",
-        "#BAE6FD",
-        "#938AA9",
-        "#DDD6FE",
-        "#A5F3FC",
+        "#727169",
+        "#e82424",
+        "#98bb6c",
+        "#e6c384",
+        "#7fb4ca",
+        "#938aa9",
+        "#7aa89f",
+        "#dcd7ba",
+    },
+    indexed = {
+        [16] = "#ffa066",
+        [17] = "#ff5d62",
     },
 }
-
-local colors = tundra_colors
 
 return {
     foreground = colors.foreground,
@@ -47,8 +49,8 @@ return {
     selection_fg = colors.selection_fg,
     selection_bg = colors.selection_bg,
 
-    scrollbar_thumb = colors.ansi.scrollbar_thumb,
-    split = colors.ansi.split,
+    scrollbar_thumb = colors.scrollbar_thumb,
+    split = colors.split,
 
     ansi = colors.ansi,
     brights = colors.brights,

@@ -21,6 +21,7 @@ local PS_ICON = symbols.cod_terminal_powershell
 local BASH_ICON = symbols.cod_terminal_bash
 local WSL_ICON = symbols.cod_terminal_linux
 local HOURGLASS_ICON = symbols.fa_hourglass_half
+local NVIM_ICON = symbols.custom_vim
 
 -- Default colors
 local BACKGROUND_COLOR = colorscheme_table.brights[1]
@@ -38,7 +39,7 @@ function M.setup()
             BACKGROUND_COLOR = colorscheme_table.brights[4]
             FOREGROUND_COLOR = colorscheme_table.ansi[1]
         else
-            BACKGROUND_COLOR = colorscheme_table.selection_bg
+            BACKGROUND_COLOR = colorscheme_table.split
             FOREGROUND_COLOR = colorscheme_table.foreground
         end
 
@@ -56,6 +57,8 @@ function M.setup()
             title_with_icon = WSL_ICON .. " WSL"
         elseif exec_name == "bash" then
             title_with_icon = BASH_ICON .. " BASH"
+        elseif exec_name == "nvim" then
+            title_with_icon = NVIM_ICON .. "NVIM"
         else
             title_with_icon = HOURGLASS_ICON .. " " .. exec_name
         end
