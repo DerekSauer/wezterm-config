@@ -38,8 +38,8 @@ function M.setup()
             BACKGROUND_COLOR = colorscheme_table.brights[4]
             FOREGROUND_COLOR = colorscheme_table.ansi[1]
         else
-            BACKGROUND_COLOR = colorscheme_table.brights[1]
-            FOREGROUND_COLOR = colorscheme_table.ansi[1]
+            BACKGROUND_COLOR = colorscheme_table.selection_bg
+            FOREGROUND_COLOR = colorscheme_table.foreground
         end
 
         local edge_foreground = BACKGROUND_COLOR
