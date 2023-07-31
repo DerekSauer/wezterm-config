@@ -58,7 +58,7 @@ function M.setup()
         elseif exec_name == "bash" then
             title_with_icon = BASH_ICON .. " BASH"
         elseif exec_name == "nvim" then
-            title_with_icon = NVIM_ICON .. "NVIM"
+            title_with_icon = NVIM_ICON .. " NVIM"
         else
             title_with_icon = HOURGLASS_ICON .. " " .. exec_name
         end
