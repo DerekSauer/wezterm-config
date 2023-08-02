@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 
 local font_stack = {
-    { family = "Iosevka Nerd Font",       weight = "Regular" },
+    { family = "IosevkaTerm Nerd Font",   weight = "Regular" },
     { family = "JetbrainsMono Nerd Font", weight = "Regular" },
     { family = "JetBrains Mono",          weight = "Regular" },
     { family = "Symbols Nerd Font Mono",  weight = "Regular" },
