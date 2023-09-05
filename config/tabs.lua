@@ -12,8 +12,9 @@ local function stripbase(path)
 end
 
 -- Tab separator icons
-local SOLID_LEFT_ARROW = symbols.ple_left_half_circle_thick
-local SOLID_RIGHT_ARROW = symbols.ple_right_half_circle_thick
+local FIRST_TAB_LEFT_SIDE = "█"
+local TAB_LEFT_SIDE = symbols.ple_left_half_circle_thick
+local TAB_RIGHT_SIDE = symbols.ple_right_half_circle_thick
 
 -- Running process icons
 local CMD_ICON = symbols.cod_terminal_cmd
@@ -24,8 +25,8 @@ local HOURGLASS_ICON = symbols.fa_hourglass_half
 local NVIM_ICON = symbols.custom_vim
 
 -- Default colors
-local BACKGROUND_COLOR = colorscheme_table.brights[1]
-local FOREGROUND_COLOR = colorscheme_table.ansi[1]
+local BACKGROUND_COLOR = colorscheme_table.background
+local FOREGROUND_COLOR = colorscheme_table.foreground
 local EDGE_COLOR = colorscheme_table.background
 local DIM_COLOR = colorscheme_table.background
 
@@ -33,14 +34,14 @@ function M.setup()
     -- Decorate the tab bar with icons based on the running shell/application and its state
     wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
         if tab.is_active then
-            BACKGROUND_COLOR = colorscheme_table.ansi[4]
+            BACKGROUND_COLOR = colorscheme_table.ansi[5]
             FOREGROUND_COLOR = colorscheme_table.ansi[1]
         elseif hover then
             BACKGROUND_COLOR = colorscheme_table.brights[4]
             FOREGROUND_COLOR = colorscheme_table.ansi[1]
         else
-            BACKGROUND_COLOR = colorscheme_table.split
-            FOREGROUND_COLOR = colorscheme_table.foreground
+            BACKGROUND_COLOR = colorscheme_table.selection_bg
+            FOREGROUND_COLOR = colorscheme_table.selection_fg
         end
 
         local edge_foreground = BACKGROUND_COLOR
@@ -73,7 +74,7 @@ function M.setup()
             { Attribute = { Intensity = "Bold" } },
             { Background = { Color = EDGE_COLOR } },
             { Foreground = { Color = edge_foreground } },
-            { Text = SOLID_LEFT_ARROW },
+            { Text = tab.tab_index == 0 and FIRST_TAB_LEFT_SIDE or TAB_LEFT_SIDE },
             { Background = { Color = BACKGROUND_COLOR } },
             { Foreground = { Color = FOREGROUND_COLOR } },
             { Text = id },
@@ -81,7 +82,7 @@ function M.setup()
             { Foreground = { Color = DIM_COLOR } },
             { Background = { Color = EDGE_COLOR } },
             { Foreground = { Color = edge_foreground } },
-            { Text = SOLID_RIGHT_ARROW },
+            { Text = TAB_RIGHT_SIDE },
             { Attribute = { Intensity = "Normal" } },
         }
     end)

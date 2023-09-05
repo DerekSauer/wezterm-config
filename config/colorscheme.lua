@@ -1,15 +1,15 @@
 local colors = {
     foreground = "#dcd7ba",
-    background = "#1f1f28",
+    background = "#1F1F28",
 
     cursor_bg = "#c8c093",
     cursor_fg = "#c8c093",
     cursor_border = "#c8c093",
 
     selection_fg = "#c8c093",
-    selection_bg = "#2d4f67",
+    selection_bg = "#363646",
 
-    scrollbar_thumb = "#16161d",
+    scrollbar_thumb = "#363646",
     split = "#16161d",
 
     ansi = {
@@ -54,6 +54,7 @@ return {
 
     ansi = colors.ansi,
     brights = colors.brights,
+    indexed = colors.indexed,
 
     tab_bar = {
         background = colors.background,
@@ -66,6 +67,7 @@ return {
             bg_color = colors.background,
             fg_color = colors.foreground,
             italic = true,
+            intensity = "Bold",
         },
     },
 }
