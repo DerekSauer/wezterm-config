@@ -8,6 +8,22 @@ local font_stack = {
     { family = "Noto Color Emoji",        weight = "Regular", assume_emoji_presentation = true },
 }
 
+-- On Windows systems, return `Powershell`.
+-- On other systems, return `$SHELL` or fallback to `Bash`.
+local function find_default_prog()
+    if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+        return { "pwsh.exe", "-NoLogo" }
+    else
+        local shell_env = os.getenv("SHELL")
+
+        if shell_env then
+            return shell_env
+        else
+            return "/bin/bash"
+        end
+    end
+end
+
 return {
     -- Font settings
     font = wezterm.font_with_fallback(font_stack),
@@ -16,19 +32,23 @@ return {
     unicode_version = 14,
     harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
     warn_about_missing_glyphs = false,
+
     -- Try out the new WebGPU front end
     -- Addendum: It works and performs better than the OpenGL front end but
     -- there is something odd going on with font rendering where light text on
     -- a dark background looks thick (very bold), while dark text on a light
     -- background looks thin. Maybe a gamma issue? Revert to OpenGL for now.
     front_end = "OpenGL",
+
     -- Default shell (Powershell on Windows $SHELL on other systems)
-    default_prog = wezterm.target_triple == "x86_64-pc-windows-msvc" and { "pwsh.exe", "-NoLogo" } or
-        { "/bin/bash" },
+    default_prog = find_default_prog(),
+
     -- Launch menu configuration
     launch_menu = require("config.launch_menu"),
+
     -- SSH
     ssh_domains = require("config.ssh_domains"),
+
     -- Window size and theming
     colors = require("config.colorscheme"),
     initial_cols = 120,
@@ -45,21 +65,27 @@ return {
         top = 0,
         bottom = 0,
     },
+
     -- Tab bar look
     hide_tab_bar_if_only_one_tab = true,
     use_fancy_tab_bar = false,
     tab_max_width = 60,
+
     -- Tab bar functionality
     require("config.tabs").setup(),
+
     -- Visual bell, flare the cursor
     visual_bell = {
         fade_in_duration_ms = 75,
         fade_out_duration_ms = 75,
         target = "CursorColor",
     },
+
     -- Keybindings
     disable_default_key_bindings = true,
     keys = require("config.keybinds"),
+
+    -- Highlight URLs
     hyperlink_rules = {
         -- Linkify things that look like URLs
         {

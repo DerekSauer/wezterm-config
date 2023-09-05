@@ -12,8 +12,8 @@ local function stripbase(path)
 end
 
 -- Tab separator icons
-local SOLID_LEFT_ARROW = symbols.ple_lower_right_triangle
-local SOLID_RIGHT_ARROW = symbols.ple_lower_left_triangle
+local SOLID_LEFT_ARROW = symbols.ple_left_half_circle_thick
+local SOLID_RIGHT_ARROW = symbols.ple_right_half_circle_thick
 
 -- Running process icons
 local CMD_ICON = symbols.cod_terminal_cmd
