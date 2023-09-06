@@ -9,18 +9,12 @@ local font_stack = {
 }
 
 -- On Windows systems, return `Powershell`.
--- On other systems, return `$SHELL` or fallback to `Bash`.
+-- On other systems, use the default; usually $SHELL.
 local function find_default_prog()
     if wezterm.target_triple == "x86_64-pc-windows-msvc" then
         return { "pwsh.exe", "-NoLogo" }
     else
-        local shell_env = os.getenv("SHELL")
-
-        if shell_env then
-            return shell_env
-        else
-            return "/bin/bash"
-        end
+        return nil
     end
 end
 
