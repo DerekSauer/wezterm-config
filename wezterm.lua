@@ -1,13 +1,5 @@
 local wezterm = require("wezterm")
 
-local font_stack = {
-    { family = "IosevkaTerm Nerd Font",   weight = "Regular" },
-    { family = "JetbrainsMono Nerd Font", weight = "Regular" },
-    { family = "JetBrains Mono",          weight = "Regular" },
-    { family = "Symbols Nerd Font Mono",  weight = "Regular" },
-    { family = "Noto Color Emoji",        weight = "Regular", assume_emoji_presentation = true },
-}
-
 -- On Windows systems, return `Powershell`.
 -- On other systems, use the default; usually $SHELL.
 local function find_default_prog()
@@ -20,8 +12,8 @@ end
 
 return {
     -- Font settings
-    font = wezterm.font_with_fallback(font_stack),
-    font_size = 13.0,
+    font = wezterm.font("IosevkaTerm Nerd Font"),
+    font_size = 12,
     freetype_interpreter_version = 40,
     unicode_version = 14,
     harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
